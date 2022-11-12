@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rust-version: stable
+        rust-version: [stable]
     steps:
       - name: Setup | Checkout
         uses: actions/checkout@v3
