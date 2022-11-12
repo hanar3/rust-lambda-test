@@ -33,6 +33,7 @@ jobs:
     name: Deploy lambda
     needs: build_artifacts
     runs-on: ubuntu-latest
+    steps:
       - name: Download binaries from previous job
         uses: actions/download-artifact@v3
         with:
