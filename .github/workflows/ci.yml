@@ -42,7 +42,7 @@ jobs:
       - name: Build Binary
         run: cargo build
 
-      name: zip
+      - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
           args: zip -qq -r lambda.zip ./targets/x86_64-unknown-linux-musl/release
