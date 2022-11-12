@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: rust-lambda
-          path: ./targets/x86_64-unknown-linux-musl/release/rust-lambda
+          path: ./targets/release/rust-lambda
   deploy_lambda:
     name: Deploy lambda
     needs: build_artifacts
