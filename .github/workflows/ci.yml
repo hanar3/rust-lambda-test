@@ -8,46 +8,44 @@ jobs:
   deploy_zip:
     name: Deploy lambda function from ZIP
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        rust-version: [1.63.0]
     steps:
       - name: Setup | Checkout
         uses: actions/checkout@v3
 
       - name: Cargo clean
         run: cargo clean
-
-      - name: Install musl-tools
-        run: |
-          set -ex
-          sudo apt-get update
-          sudo apt-get install -y musl-tools
-      - run: >
-          rustup target add
-          x86_64-unknown-linux-musl
-          x86_64-unknown-linux-gnux32
-          x86_64-linux-android
-          x86_64-apple-darwin
-          x86_64-unknown-freebsd
-          x86_64-unknown-netbsd
-          x86_64-fuchsia
-          i686-unknown-linux-gnu
-          i686-unknown-linux-musl
-          wasm32-unknown-emscripten
-          riscv64gc-unknown-linux-gnu
+      # - name: Install musl-tools
+      #   run: |
+      #     set -ex
+      #     sudo apt-get update
+      #     sudo apt-get install -y musl-tools
+      # - run: >
+      #     rustup target add
+      #     x86_64-unknown-linux-musl
+      #     x86_64-unknown-linux-gnux32
+      #     x86_64-linux-android
+      #     x86_64-apple-darwin
+      #     x86_64-unknown-freebsd
+      #     x86_64-unknown-netbsd
+      #     x86_64-fuchsia
+      #     i686-unknown-linux-gnu
+      #     i686-unknown-linux-musl
+      #     wasm32-unknown-emscripten
+      #     riscv64gc-unknown-linux-gnu
       - name: Setup | Rust
         uses: ATiltedTree/setup-rust@v1
         with:
           rust-version: 1.64.0
+          targets:
+            - x86_64-unknown-linux-musl
       - name: Build | Check
         run: cargo check
       - name: Build Binary
         uses: ATiltedTree/setup-rust@v1
+        
         with:
           rust-version: 1.64.0
-        run: |
-          TARGET_CC=x86_64-linux-musl-gcc cargo build --release --target x86_64-unknown-linux-musl
+        run: cargo build 
       - name: Deploy Zip
         uses: ./
         with:
