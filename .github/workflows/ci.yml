@@ -40,61 +40,17 @@ jobs:
       - name: Build | Check
         run: cargo check
       - name: Build Binary
-        run: cargo build 
+        run: cargo build
+
+      name: zip
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r lambda.zip ./targets/x86_64-unknown-linux-musl/release
       - name: Deploy Zip
-        uses: ./
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: ${{ secrets.AWS_REGION }}
           function_name: rust-lambda
-          zip_file: deployment.zip
+          zip_file: lambda.zip
           debug: true
-      
-      - name: update env
-        uses: ./
-        with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{ secrets.AWS_REGION }}
-          function_name: gorush
-          zip_file: example/deployment.zip
-          environment: foo=bar,author=appleboy
-          debug: true
-
-      - name: update config
-        uses: ./
-        with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{ secrets.AWS_REGION }}
-          function_name: gorush
-          zip_file: example/deployment.zip
-          debug: true
-          memory_size: 128
-          timeout: 10
-          # origin value is "hello"
-          handler: foobar
-
-      - name: dry run
-        uses: ./
-        with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{ secrets.AWS_REGION }}
-          function_name: rust-lambda
-          zip_file: deployment.zip
-          debug: true
-          dry_run: true
-
-      - name: update role
-        uses: ./
-        with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{ secrets.AWS_REGION }}
-          function_name: rust-lambda
-          zip_file: example/deployment.zip
-          debug: true
-          role: arn:aws:iam::105396115708:role/s3-lambdas
-          dry_run: true
