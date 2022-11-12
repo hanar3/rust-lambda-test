@@ -11,8 +11,6 @@ jobs:
     strategy:
       matrix:
         rust-version: stable
-    name: Compile
-    runs-on: ubuntu-latest
     steps:
       - name: Setup | Checkout
         uses: actions/checkout@v3
