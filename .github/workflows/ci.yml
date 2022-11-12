@@ -5,8 +5,8 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  deploy_zip:
-    name: Deploy lambda function from ZIP
+  build_artifacts:
+    name: Build source code
     runs-on: ubuntu-latest
     steps:
       - name: Setup | Checkout
@@ -14,24 +14,7 @@ jobs:
 
       - name: Cargo clean
         run: cargo clean
-      # - name: Install musl-tools
-      #   run: |
-      #     set -ex
-      #     sudo apt-get update
-      #     sudo apt-get install -y musl-tools
-      # - run: >
-      #     rustup target add
-      #     x86_64-unknown-linux-musl
-      #     x86_64-unknown-linux-gnux32
-      #     x86_64-linux-android
-      #     x86_64-apple-darwin
-      #     x86_64-unknown-freebsd
-      #     x86_64-unknown-netbsd
-      #     x86_64-fuchsia
-      #     i686-unknown-linux-gnu
-      #     i686-unknown-linux-musl
-      #     wasm32-unknown-emscripten
-      #     riscv64gc-unknown-linux-gnu
+
       - name: Setup | Rust
         uses: ATiltedTree/setup-rust@v1
         with:
@@ -41,12 +24,23 @@ jobs:
         run: cargo check
       - name: Build Binary
         run: cargo build
-      - name: Copy artifacts
-        run: cp ./targets/release/rust-lambda ./bootstrap
+      - name: Upload binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: rust-lambda
+          path: ./targets/x86_64-unknown-linux-musl/release/rust-lambda
+  deploy_lambda:
+    name: Deploy lambda
+    needs: build_artifacts
+    runs-on: ubuntu-latest
+      - name: Download binaries from previous job
+        uses: actions/download-artifact@v3
+        with:
+          name: rust-lambda
       - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
-          args: zip -qq -r lambda.zip . -i ./boostrap
+          args: zip -qq -r lambda.zip . -i ./rust-lambda
       - name: Deploy Zip
         uses: appleboy/lambda-action@master
         with:
