@@ -8,13 +8,12 @@ jobs:
   deploy_zip:
     name: Deploy lambda function from ZIP
     runs-on: ubuntu-latest
-  strategy:
-    matrix:
-      rust-version: stable
+    strategy:
+      matrix:
+        rust-version: stable
     name: Compile
     runs-on: ubuntu-latest
     steps:
-    
       - name: Setup | Checkout
         uses: actions/checkout@v3
       - name: Setup | Rust
