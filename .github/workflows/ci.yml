@@ -44,7 +44,7 @@ jobs:
       - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
-          args: zip -qq -r lambda.zip ./targets/x86_64-unknown-linux-musl/release/rust-lambda
+          args: zip -qq -r lambda.zip . -i ./targets/x86_64-unknown-linux-musl/release/rust-lambda
       - name: Deploy Zip
         uses: appleboy/lambda-action@master
         with:
