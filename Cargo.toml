@@ -1,0 +1,16 @@
+[package]
+name = "rust-lambda"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aws-config = "0.51.0"
+aws-sdk-s3 = "0.21.0"
+env_logger = "0.9.3"
+lambda_runtime = "0.7.0"
+log = "0.4.17"
+serde = { version = "1.0.147", features = ["derive"] }
+time = { version = "0.3.17", features = ["std"] }
+tokio = { version = "1.21.2", features = ["full"] }
+
+
