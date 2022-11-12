@@ -41,12 +41,12 @@ jobs:
         run: cargo check
       - name: Build Binary
         run: cargo build
-
       - name: zip
         uses: montudor/action-zip@v0.1.0
         with:
           args: zip -qq -r lambda.zip ./targets/x86_64-unknown-linux-musl/release
       - name: Deploy Zip
+        uses: appleboy/lambda-action@master
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
