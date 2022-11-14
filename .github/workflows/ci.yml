@@ -34,13 +34,19 @@ jobs:
         run: 'sudo zip -j lambda.zip bootstrap'
         working-directory: ./target/x86_64-unknown-linux-musl/release
 
-      - name: Deploy Zip
-        uses: appleboy/lambda-action@master
-        working-directory: ./target/x86_64-unknown-linux-musl/release
+      - name: Upload binary
+        uses: actions/upload-artifact@v3
         with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{ secrets.AWS_REGION }}
-          function_name: rust-lambda
-          zip_file: lambda.zip
-          debug: true
+          name: rust-lambda
+          path: ./target/x86_64-unknown-linux-musl/release/lambda.zip
+
+      # - name: Deploy Zip
+      #   uses: appleboy/lambda-action@master
+      #   working-directory: ./target/x86_64-unknown-linux-musl/release
+      #   with:
+      #     aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws_region: ${{ secrets.AWS_REGION }}
+      #     function_name: rust-lambda
+      #     zip_file: lambda.zip
+      #     debug: true
