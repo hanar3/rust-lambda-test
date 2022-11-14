@@ -22,28 +22,21 @@ jobs:
           targets: x86_64-unknown-linux-musl
       - name: Build | Check
         run: cargo check
+
       - name: Build Binary
-        run: cargo build
-      - name: Upload binary
-        uses: actions/upload-artifact@v3
-        with:
-          name: rust-lambda
-          path: target/release/rust-lambda-test
-  deploy_lambda:
-    name: Deploy lambda
-    needs: build_artifacts
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download binaries from previous job
-        uses: actions/download-artifact@v3
-        with:
-          name: rust-lambda
-      - name: zip
-        uses: montudor/action-zip@v0.1.0
-        with:
-          args: zip -qq -r lambda.zip . -i ./rust-lambda
+        run: cargo build --release --all-features --target=x86_64-unknown-linux-musl
+
+      - name: Rename binary to bootstrap
+        run: 'mv ./rust_lambda ./bootstrap'
+        working-directory: ./target/x86_64-unknown-linux-musl/release
+      
+      - name: Zip Code for Deployment
+        run: 'sudo zip -j lambda.zip bootstrap'
+        working-directory: ./target/x86_64-unknown-linux-musl/release
+
       - name: Deploy Zip
         uses: appleboy/lambda-action@master
+        working-directory: ./target/x86_64-unknown-linux-musl/release
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
